@@ -107,7 +107,7 @@ class Deck(Hand):
         Returns: - None if deck is empty or card not found. 
                 - a_card or last card in the deck otherwise.
         """
-        if  not self.cards :
+        if not self.cards :
             print("The deck is empty!")
             return None
         elif not a_card:
