@@ -1,12 +1,12 @@
-from Poker import *
+import Poker
 import Input
 
 answer = True
 while answer:
-    deck = Poker_Deck()
+    deck = Poker.PokerDeck()
     deck.shuffle()
-    ph1 = Poker_Hand()
-    ph2 = Poker_Hand()
+    ph1 = Poker.PokerHand()
+    ph2 = Poker.PokerHand()
     for i in range(5):
         ph1.get_card(deck.deal())
         ph2.get_card(deck.deal())

@@ -34,8 +34,11 @@ class Card:
     
     
 class Hand:
-    def __init__(self):
+    def __init__(self, cards=None):
         self.cards = []
+        if cards:
+            for card in cards:
+                self.get_card(card)
 
     def get_card(self, a_card):
         if not a_card:

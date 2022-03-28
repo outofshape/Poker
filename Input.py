@@ -5,6 +5,7 @@ Functions to handle different kind of inputs
 @author: Gun
 """
 import Cards
+import Poker
 
 
 def get_yes_or_no(message):
@@ -18,7 +19,7 @@ def get_yes_or_no(message):
         return get_yes_or_no(message)
 
 
-def get_integer(message="Please enter an integer:"):
+def get_integer(message="Please enter an integer: "):
     while True:
         try:
             reply = int(input(message))
@@ -34,4 +35,14 @@ def get_card(message):
             card = Cards.Card(Cards.values.index(reply[0])+1, reply[1])
             return card
         except (AssertionError, TypeError, IndexError, ValueError):
+            pass
+
+
+def get_poker_card(message):
+    while True:
+        try:
+            reply = input(message + " e.g. Kd, 8s,.. : ")
+            card = Poker.PokerCard(Cards.values.index(reply[0])+1, reply[1])
+            return card
+        except (AssertionError, TypeError, IndexError, ValueError, AttributeError):
             pass
