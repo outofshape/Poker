@@ -35,14 +35,17 @@ class PokerCard(Cards.Card):
 
 
 class PokerDeck(Cards.Deck):
-    def __init__(self):
+    def __init__(self, poker_cards=None):
         """
         Initiate the deck with poker cards.
         """
-        self.cards = []
-        for suit in Cards.suits:
-            for id_value in range(len(Cards.values)):
-                self.cards.append(PokerCard(id_value + 1, suit))
+        if poker_cards:
+            self.cards = poker_cards.copy()
+        else:
+            self.cards = []
+            for suit in Cards.suits:
+                for id_value in range(len(Cards.values)):
+                    self.cards.append(PokerCard(id_value + 1, suit))
 
 
 class PokerHand(Cards.Hand):
@@ -222,11 +225,9 @@ class PokerHand(Cards.Hand):
 
     def is_straight(self, some_cards=None):
         """
-        Parameters:
-            - some_cards: a list of poker cards. Default: self.cards
         Checks if there is a straight.
-        Returns: 
-            if found the 5 cards that form the highest straight, if not found an empty list
+        :param some_cards: list of poker cards. Default: self.cards
+        :return: if found the 5 cards that form the highest straight, if not found an empty list
         """
         straight = []
         if not some_cards:

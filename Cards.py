@@ -37,14 +37,16 @@ class Hand:
     def __init__(self, cards=None):
         self.cards = []
         if cards:
-            for card in cards:
-                self.get_card(card)
+            self.cards = cards.copy()
 
     def get_card(self, a_card):
         if not a_card:
             pass
         else:
             self.cards.append(a_card)
+
+    def get_number_of_cards(self):
+        return len(self.cards)
 
     def search(self, a_card):
         """
@@ -56,7 +58,7 @@ class Hand:
         else:
             found = None
             for card in self.cards:
-                if card == a_card :
+                if card == a_card:
                     found = card
             return found
     
@@ -86,20 +88,21 @@ class Hand:
 
 
 class Deck(Hand):
-    def __init__(self):
-        self.cards = []
-        for suit in suits:
-            for id_value in range(len(values)):
-                self.cards.append(Card(id_value + 1, suit))
+    def __init__(self, cards=None):
+        super().__init__(cards)
+        if not self.cards:
+            for suit in suits:
+                for id_value in range(len(values)):
+                    self.cards.append(Card(id_value + 1, suit))
 
     def shuffle(self):
         temp = []
         seed()
-        while len(self.cards)>0 :
+        while len(self.cards) > 0:
             temp.append(self.cards.pop(randrange(len(self.cards))))
         self.cards = temp
 
-    def deal(self, a_card = None):
+    def deal(self, a_card=None):
         """
         Parameters:
             - a_card: Card (optional). 
@@ -110,7 +113,7 @@ class Deck(Hand):
         Returns: - None if deck is empty or card not found. 
                 - a_card or last card in the deck otherwise.
         """
-        if not self.cards :
+        if not self.cards:
             print("The deck is empty!")
             return None
         elif not a_card:

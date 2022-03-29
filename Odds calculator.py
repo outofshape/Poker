@@ -14,6 +14,55 @@ import Poker
 from Input import *
 import Cards
 
+
+def calculate_odds(players, board, deck, n):
+    """
+    Calculates the odds of winning for each player's hands, by running the remaining cards "n" times randomly.
+
+    :param players: List of PokerPlayers
+    :param board: Cards.Hand object, can have 0, 3 (Flop) or 4 (Turn) cards
+    :param deck: PokerDeck with the remaining cards
+    :param n: Integer
+    :return: List of Dict [{wins: #, losses: #}, {wins: #, losses: #}, {wins: #, losses: #}, ...]
+    """
+    results = []
+    for p in range(len(players)):
+        results.append({"wins": 0, "losses": 0})
+    for iterations in range(n):
+        t_board = Cards.Hand(board.cards)
+        t_deck = Poker.PokerDeck(deck.cards)
+        t_deck.shuffle()
+        for j in range(5-board.get_number_of_cards()):
+            t_board.get_card(t_deck.deal())
+        print(f"--- The board is: ---\n{str(t_board)}")
+        w_index = []
+        for player in players:
+            p_i = players.index(player)
+            player.eval_poker_hand(t_board.cards)
+            print(f"Player {p_i + 1} has:\n{str(player)}")
+            if not w_index:
+                w_index.append(p_i)
+            elif player.get_poker_hand() > players[w_index[0]].get_poker_hand():
+                for w_i in w_index:
+                    results[w_i]["losses"] += 1
+                w_index = [p_i]
+            elif player.get_poker_hand() == players[w_index[0]].get_poker_hand():
+                w_index.append(p_i)
+            else:
+                results[p_i]["losses"] += 1
+        if len(w_index) == 1:
+            w_i = w_index[0]
+            print(f"Player {w_i + 1} wins!")
+            results[w_i]["wins"] += 1
+        else:
+            text = f"Players {w_index[0] + 1} "
+            for w in range(1, len(w_index)):
+                text += f"and {w_index[w] + 1} "
+            text += f"split!"
+            print(text)
+    return results
+
+
 play = True
 while play:
     deck = Poker.PokerDeck()
@@ -32,35 +81,10 @@ while play:
         if get_yes_or_no("Do you want to choose the turn? "):
             board.get_card(deck.deal(get_poker_card(f"Please enter the turn: ")))
             print(f"--- The turn is: ---\n{str(board)}")
-    deck.shuffle()
     n = get_integer("How many simulations? ")
-    # Flop
-    for i in range(3):
-        board.get_card(deck.deal())
-    print(f"--- The flop is: ---\n{str(board)}")
-    # Turn
-    board.get_card(deck.deal())
-    print(f"--- The turn is: ---\n{str(board)}")
-    # River
-    board.get_card(deck.deal())
-    print(f"--- The river is: ---\n{str(board)}")
-    winner = []
-    for player in players:
-        player.eval_poker_hand(board.cards)
-        print(f"Player {players.index(player)+1} has:\n{str(player)}")
-        if not winner:
-            winner = [player]
-        elif player.get_poker_hand() > winner[0].get_poker_hand():
-            winner[0] = player
-        elif player.get_poker_hand() == winner[0].get_poker_hand():
-            winner.append(player)
-    if len(winner) == 1:
-        print(f"Player {players.index(winner[0])+1} wins!")
-    else:
-        text = f"Players {players.index(winner[0])+1} "
-        for i in range(1,len(winner)):
-            text += f"and {players.index(winner[i])+1} "
-        text += f"split!"
-        print(text)
-
+    results = calculate_odds(players, board, deck, n)
+    for r in range(len(results)):
+        wins = results[r]["wins"]
+        losses = results[r]["losses"]
+        print(f"Player {r+1} has {wins} Wins, {losses} Losses and a {wins*100/n}% chance of winning.")
     play = get_yes_or_no("Do you want to calculate new odds? ")
