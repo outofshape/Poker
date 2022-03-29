@@ -40,8 +40,9 @@ def get_card(message):
 
 def get_poker_card(message):
     while True:
+        reply = input(message + " e.g. Kd, 8s,.. : ")
         try:
-            reply = input(message + " e.g. Kd, 8s,.. : ")
+            assert len(reply) == 2 and reply[0] in Cards.values and reply[1] in Cards.suits, "Not a valid card"
             card = Poker.PokerCard(Cards.values.index(reply[0])+1, reply[1])
             return card
         except (AssertionError, TypeError, IndexError, ValueError, AttributeError):

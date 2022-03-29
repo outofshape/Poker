@@ -69,8 +69,8 @@ while play:
     num_players = get_integer("How many players? ")
     players = []
     for i in range(num_players):
-        c1 = get_poker_card(f"Please enter the first card for Player {i+1}: ")
-        c2 = get_poker_card(f"Please enter the second card for Player {i+1}: ")
+        c1 = deck.deal(get_poker_card(f"Please enter the first card for Player {i+1}: "))
+        c2 = deck.deal(get_poker_card(f"Please enter the second card for Player {i+1}: "))
         players.append(Poker.PokerPlayer((c1, c2)))
     board = Cards.Hand()
     if get_yes_or_no("Do you want to choose the flop? "):
